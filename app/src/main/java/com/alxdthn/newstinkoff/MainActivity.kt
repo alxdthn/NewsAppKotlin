@@ -1,4 +1,4 @@
-package com.criticalgnome.recyclerviewwithkotlin
+package com.alxdthn.newstinkoff
 
 import android.content.Intent
 import android.os.Bundle

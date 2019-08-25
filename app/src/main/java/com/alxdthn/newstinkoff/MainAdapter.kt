@@ -1,4 +1,4 @@
-package com.criticalgnome.recyclerviewwithkotlin
+package com.alxdthn.newstinkoff
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater

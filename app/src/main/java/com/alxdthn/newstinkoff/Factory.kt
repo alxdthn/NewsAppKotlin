@@ -1,4 +1,4 @@
-package com.criticalgnome.recyclerviewwithkotlin
+package com.alxdthn.newstinkoff
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

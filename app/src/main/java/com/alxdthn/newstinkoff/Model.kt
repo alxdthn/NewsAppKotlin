@@ -1,4 +1,4 @@
-package com.criticalgnome.recyclerviewwithkotlin
+package com.alxdthn.newstinkoff
 
 data class Date (
         val milliseconds: ULong
