@@ -1,7 +1,7 @@
 package com.alxdthn.newstinkoff
 
 data class Date (
-        val milliseconds: ULong
+        val milliseconds: Long
 )
 
 data class Payload (

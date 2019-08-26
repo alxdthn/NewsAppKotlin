@@ -1,44 +1,30 @@
 package com.alxdthn.newstinkoff
 
-import android.content.Intent
+import android.content.DialogInterface
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
-import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_scrolling.*
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.*
-
+import java.io.IOException
 
 class MainActivity : AppCompatActivity()  {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setContentView(R.layout.activity_main)
 
-        val service = RetrofitFactory.makeRetrofitService()
+		val service = RetrofitFactory.makeRetrofitService()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = service.getPosts()
-            runOnUiThread {
-                val news = response.body()?.payload?.toList() ?: throw (Throwable("Error"))
-                val myAdapter = MainAdapter(news, object : MainAdapter.Callback {
-                   override fun onItemClicked(item: Payload) {
-                       Log.d("click", item.id.toString())
-                       CoroutineScope(Dispatchers.IO).launch {
-                           val response = service.getContent(item.id)
-                           runOnUiThread {
-                               val content = response.body()?.payload ?: throw (Throwable("Error"))
-                               val intent = Intent(this@MainActivity, NewsContent::class.java)
-                               intent.putExtra("content", content.content)
-                               startActivity(intent)
-                           }
-                       }
-                    }
-                })
-                myRecycler.adapter = myAdapter
-            }
-        }
-    }
+		CoroutineScope(Dispatchers.Main).launch {
+			try {
+				val response = service.getPosts()
+				val news = response.body()?.payload?.toList() ?: throw (Throwable("Error"))
+				runOnUiThread{ viewProcess(news, service, this@MainActivity) }
+			} catch (e: Throwable) {
+				alertWindow(this@MainActivity, "No internet connection")
+			}
+		}
+	}
 }
 

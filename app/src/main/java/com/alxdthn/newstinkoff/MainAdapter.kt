@@ -8,28 +8,30 @@ import android.widget.TextView
 
 class MainAdapter(var items: List<Payload>, val callback: Callback) : RecyclerView.Adapter<MainAdapter.MainHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            = MainHolder(LayoutInflater.from(parent.context).inflate(R.layout.main_item, parent, false))
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
+			= MainHolder(LayoutInflater.from(parent.context).inflate(R.layout.main_item, parent, false))
 
-    override fun getItemCount() = items.size
+	override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        holder.bind(items[position])
-    }
+	override fun onBindViewHolder(holder: MainHolder, position: Int) {
+		holder.bind(items[position])
+	}
 
-    inner class MainHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+	inner class MainHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val newsText = itemView.findViewById<TextView>(R.id.newsLine)
+		private val newsLine = itemView.findViewById<TextView>(R.id.newsLine)
+		private val newsDate = itemView.findViewById<TextView>(R.id.newsDate)
 
-        fun bind(item: Payload) {
-            newsText.text = item.text
-            itemView.setOnClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION) callback.onItemClicked(items[adapterPosition])
-            }
-        }
-    }
+		fun bind(item: Payload) {
+			newsLine.text = html2Text(item.text)
+			newsDate.text = getDate(item.publicationDate.milliseconds, "dd/MM/yyyy hh:mm")
+			itemView.setOnClickListener {
+				if (adapterPosition != RecyclerView.NO_POSITION) callback.onItemClicked(items[adapterPosition])
+			}
+		}
+	}
 
-    interface Callback {
-        fun onItemClicked(item: Payload)
-    }
+	interface Callback {
+		fun onItemClicked(item: Payload)
+	}
 }
