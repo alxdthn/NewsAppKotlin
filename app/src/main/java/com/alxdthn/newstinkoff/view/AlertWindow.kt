@@ -1,4 +1,4 @@
-package com.alxdthn.newstinkoff
+package com.alxdthn.newstinkoff.view
 
 import android.util.Log
 import androidx.appcompat.app.AlertDialog

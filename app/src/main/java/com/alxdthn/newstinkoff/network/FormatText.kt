@@ -1,4 +1,4 @@
-package com.alxdthn.newstinkoff
+package com.alxdthn.newstinkoff.network
 
 import android.text.Spanned
 import androidx.core.text.HtmlCompat

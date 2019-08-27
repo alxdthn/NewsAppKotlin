@@ -1,12 +1,10 @@
-package com.alxdthn.newstinkoff
+package com.alxdthn.newstinkoff.network
 
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 fun getDate(milliSeconds: Long, dateFormat: String): String {
-	// Create a DateFormatter object for displaying date in specified format.
-	val formatter = SimpleDateFormat(dateFormat)
+	val formatter = SimpleDateFormat(dateFormat, Locale.ENGLISH)
 
 	val calendar = Calendar.getInstance()
 	calendar.timeInMillis = milliSeconds

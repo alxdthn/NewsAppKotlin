@@ -14,7 +14,7 @@
 	android:layout_marginBottom="5dp"
 	android:layout_marginTop="5dp"
 	app:layout_behavior="@string/appbar_scrolling_view_behavior"
-	tools:context=".NewsContent"
+	tools:context=".NewsContentActivity"
 	tools:showIn="@layout/activity_scrolling"
 	android:background="@drawable/layout_border">
 

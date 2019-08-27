@@ -1,4 +1,4 @@
-package com.alxdthn.newstinkoff
+package com.alxdthn.newstinkoff.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
