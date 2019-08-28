@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface RetrofitService {
 	@GET("news")
-	fun getPosts(): Call<Answer>
+	suspend fun getPosts(): Response<Answer>
 
 	@GET("news_content/")
 	suspend fun getContent(@Query("id", encoded = true) id: Int): Response<Content>

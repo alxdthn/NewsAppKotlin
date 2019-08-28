@@ -10,7 +10,10 @@ import com.alxdthn.newstinkoff.R
 import com.alxdthn.newstinkoff.data.AppDatabase
 import com.alxdthn.newstinkoff.data.NewsEntity
 import com.alxdthn.newstinkoff.network.ContentPayload
+import com.alxdthn.newstinkoff.network.Date
+import com.alxdthn.newstinkoff.network.Payload
 import com.alxdthn.newstinkoff.network.RetrofitService
+import com.alxdthn.newstinkoff.parseToEntity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +35,7 @@ fun viewProcess(db: AppDatabase, service: RetrofitService, activity: AppCompatAc
 		object : MainAdapter.Callback {
 
 			override fun onItemClicked(item: NewsEntity) {
-				Log.d("click", item.id.toString())
+				Log.d("bestTAG", item.id.toString())
 				CoroutineScope(Dispatchers.IO).launch {
 					try {
 						val response = service.getContent(item.id)
@@ -44,7 +47,9 @@ fun viewProcess(db: AppDatabase, service: RetrofitService, activity: AppCompatAc
 							)
 						}
 					} catch (e: Throwable) {
-						alertWindow(activity, "No internet connection")
+						activity.runOnUiThread {
+							alertWindow(activity, "No internet connection")
+						}
 					}
 				}
 			}
@@ -54,13 +59,19 @@ fun viewProcess(db: AppDatabase, service: RetrofitService, activity: AppCompatAc
 
     swipeContainer.setOnRefreshListener {
         Log.d("bestTAG", "refresh!")
-		val test = NewsEntity(1, "name", "text", 12, 2)
-
-        (activity.myRecycler.adapter as MainAdapter).updateData(mutableListOf(test))
+		CoroutineScope(Dispatchers.IO).launch {
+			try {
+				parseToEntity(db, service.getPosts().body()?.payload?.toList())
+				(activity.myRecycler.adapter as MainAdapter).updateData(db.make().getAll())
+			} catch (e: Throwable) {
+				activity.runOnUiThread {
+					alertWindow(activity, "no internet connection")
+				}
+			}
+		}
 		activity.myRecycler.adapter?.notifyDataSetChanged()
-        swipeContainer.isRefreshing = false
-    }
-
+		swipeContainer.isRefreshing = false
+	}
     swipeContainer.setColorSchemeColors(
             activity.resources.getColor(R.color.tinkoffYellow),
             activity.resources.getColor(R.color.design_default_color_primary),

@@ -1,7 +1,5 @@
 package com.alxdthn.newstinkoff.network
 
-import androidx.room.PrimaryKey
-
 data class Date (
 	val milliseconds: Long
 )
