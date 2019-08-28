@@ -1,6 +1,7 @@
 package com.alxdthn.newstinkoff.data
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -17,11 +18,15 @@ abstract class AppDatabase : RoomDatabase(){
 		private val LOCK = Any()
 
 		operator fun invoke(context: Context)= instance ?: synchronized(LOCK){
-			instance ?: buildDatabase(context).also { instance = it}
+			instance ?: buildDatabase(context).also { instance = it }
 		}
 
-		private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
-			AppDatabase::class.java, "todo-list.db")
-			.build()
+		private fun buildDatabase(context: Context): AppDatabase {
+			Log.d("bestTAG", "building db")
+			return Room.databaseBuilder(context,
+					AppDatabase::class.java,
+					"todo-list.db")
+					.allowMainThreadQueries().build()
+		}
 	}
 }

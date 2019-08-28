@@ -11,7 +11,6 @@ fun	alertWindow(activity: AppCompatActivity, message: String) {
 
 		alertDialogBuilder.setTitle("TinkoffNews")
 		alertDialogBuilder.setMessage(message)
-		alertDialogBuilder.setOnDismissListener{ finishAffinity(activity) }
 		alertDialogBuilder.show()
 		Log.d("DEBUG", "alert: $message")
 	} catch (e: Throwable) {

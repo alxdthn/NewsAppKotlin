@@ -4,18 +4,18 @@ import androidx.room.*
 
 @Dao
 interface NewsDao {
-	@Query("SELECT * FROM NewsEntity")
-	suspend fun getAll(): List<NewsEntity>
+	@Query("SELECT * FROM NewsEntity ORDER BY publicationDate DESC")
+	fun getAll(): MutableList<NewsEntity>
 
 	@Query("SELECT * FROM NewsEntity WHERE id = :id")
-	suspend fun getById(id: Long): NewsEntity
+	fun getById(id: Long): NewsEntity
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun insert(newsEntity: NewsEntity)
+	fun insert(newsEntity: NewsEntity)
 
 	@Update
-	suspend fun update(newsEntity: NewsEntity)
+	fun update(newsEntity: NewsEntity)
 
 	@Delete
-	suspend fun delete(newsEntity: NewsEntity)
+	fun delete(newsEntity: NewsEntity)
 }

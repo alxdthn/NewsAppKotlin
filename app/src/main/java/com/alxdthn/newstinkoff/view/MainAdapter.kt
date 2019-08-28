@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.alxdthn.newstinkoff.R
-import com.alxdthn.newstinkoff.network.Payload
+import com.alxdthn.newstinkoff.data.NewsEntity
 import com.alxdthn.newstinkoff.network.getDate
 import com.alxdthn.newstinkoff.network.html2Text
 
-class MainAdapter(var items: List<Payload>, val callback: Callback) : RecyclerView.Adapter<MainAdapter.MainHolder>() {
+class MainAdapter(var items: MutableList<NewsEntity>, val callback: Callback) : RecyclerView.Adapter<MainAdapter.MainHolder>() {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
 			= MainHolder(LayoutInflater.from(parent.context).inflate(R.layout.main_item, parent, false))
@@ -21,15 +21,19 @@ class MainAdapter(var items: List<Payload>, val callback: Callback) : RecyclerVi
 		holder.bind(items[position])
 	}
 
+    fun updateData(new: MutableList<NewsEntity>){
+        this.items = new
+    }
+
 	inner class MainHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 		private val newsLine = itemView.findViewById<TextView>(R.id.newsLine)
 		private val newsDate = itemView.findViewById<TextView>(R.id.newsDate)
 
-		fun bind(item: Payload) {
+		fun bind(item: NewsEntity) {
 			newsLine.text = html2Text(item.text)
 			newsDate.text = getDate(
-				item.publicationDate.milliseconds,
+				item.publicationDate,
 				"dd/MM/yyyy hh:mm"
 			)
 			itemView.setOnClickListener {
@@ -39,6 +43,6 @@ class MainAdapter(var items: List<Payload>, val callback: Callback) : RecyclerVi
 	}
 
 	interface Callback {
-		fun onItemClicked(item: Payload)
+		fun onItemClicked(item: NewsEntity)
 	}
 }

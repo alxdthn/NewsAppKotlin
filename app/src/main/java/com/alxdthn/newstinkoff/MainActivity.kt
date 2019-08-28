@@ -1,15 +1,39 @@
 package com.alxdthn.newstinkoff
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.alxdthn.newstinkoff.data.AppDatabase
 import com.alxdthn.newstinkoff.data.NewsEntity
+import com.alxdthn.newstinkoff.network.Payload
 import com.alxdthn.newstinkoff.network.RetrofitFactory
+import com.alxdthn.newstinkoff.network.getResponse
 import com.alxdthn.newstinkoff.view.alertWindow
 import com.alxdthn.newstinkoff.view.viewProcess
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import retrofit2.Response
 
+fun parseToEntity(db: AppDatabase, news: List<Payload>?) {
+
+	var entity: NewsEntity
+
+	if (news != null) {
+		Log.d("bestTAG", "start parce")
+		for (node in news) {
+			entity = NewsEntity(
+					node.id, node.name, node.text,
+					node.publicationDate.milliseconds,
+					node.bankInfoTypeId
+			)
+			db.make().insert(entity)
+		}
+		Log.d("bestTAG", "end parce")
+	}
+	else
+		Log.d("bestTAG", "no response")
+}
 
 class MainActivity : AppCompatActivity()  {
 
@@ -17,21 +41,10 @@ class MainActivity : AppCompatActivity()  {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
 
-		CoroutineScope(Dispatchers.IO).launch {
-			val test = NewsEntity(1, 2, "name", "test", 123, 13)
-			val db = AppDatabase.invoke(this@MainActivity)
-			db.make().insert(test)
-		}
-
+		val db = AppDatabase.invoke(this@MainActivity)
 		val service = RetrofitFactory.makeRetrofitService()
 
-		CoroutineScope(Dispatchers.Main).launch {
-			try {
-				val response = service.getPosts()
-				val news = response.body()?.payload?.toList() ?: throw (Throwable("Error"))
-				runOnUiThread{ viewProcess(news, service, this@MainActivity) }
-			} catch (e: Throwable) { alertWindow(this@MainActivity, "No internet connection") }
-		}
+		parseToEntity(db, getResponse(service))
+		viewProcess(db, service, this@MainActivity)
 	}
 }
-
